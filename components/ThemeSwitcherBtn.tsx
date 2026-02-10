@@ -1,6 +1,7 @@
 "use client"
 
 import * as React from "react"
+import { useEffect, useState } from "react"
 import { Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 
@@ -14,6 +15,22 @@ import {
 
 export function ThemeSwitcherBtn() {
   const { setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  // UseEffect only runs on the client, so we know it's safe to render
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  // While mounting, we render a placeholder with the same dimensions 
+  // to avoid layout shift and hydration errors.
+  if (!mounted) {
+    return (
+      <Button variant="outline" size="icon" disabled>
+        <Sun className="h-[1.2rem] w-[1.2rem] opacity-0" />
+      </Button>
+    )
+  }
 
   return (
     <DropdownMenu>

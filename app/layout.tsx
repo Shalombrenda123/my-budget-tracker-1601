@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ClerkProvider } from "@clerk/nextjs";
@@ -15,9 +15,18 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+// 1. Standard Metadata
 export const metadata: Metadata = {
   title: "Budget Tracker",
-  description: "Budget tracking application by Brenda",
+  description: "Track your expenses",
+};
+
+// 2. Separate Viewport Export (This fixes the mobile zoom issue)
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
 };
 
 export default function RootLayout({
@@ -27,7 +36,6 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider
-      // 1. Move localization here to fix the TS error
       localization={{
         signIn: {
           start: {
@@ -44,16 +52,17 @@ export default function RootLayout({
       }}
       appearance={{
         variables: {
-          colorPrimary: "#2563eb", 
+          colorPrimary: "#2563eb",
         },
         elements: {
           footer: "hidden",
-          // ... rest of your global styles
         },
       }}
     >
       <html lang="en" suppressHydrationWarning>
-        <body className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans`}>
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased font-sans min-h-screen w-full overflow-x-hidden`}
+        >
           <Toaster richColors position="bottom-right" />
           <RootProviders>{children}</RootProviders>
         </body>
